@@ -1,254 +1,48 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<title>Banka Uygulaması</title>
-	<style>
-	* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
-
-#container {
-  background-color: rgba(102, 204, 255, 0.8);
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: white;
-  text-shadow: 2px 2px 3px rgba(0,0,0,0.3);
-}
-
-.card-form {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: box-shadow 0.3s ease-in-out;
-}
-
-.card-form:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  color: #555;
-}
-
-input[type="text"] {
-  font-size: 1.2rem;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
-  margin-bottom: 1rem;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.2);
-}
-
-.bank-selection {
-  display: flex;
-  flex-direction: column;
-}
-
-.bank-selection label {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.bank-selection input[type="radio"] {
-  margin-right: 0.5rem;
-}
-
-.bank-selection input[type="radio"]:checked + span {
-  font-weight: bold;
-}
-
-#devam-btn,
-#bank-selection-form button,
-#iban-form button {
-  background-color: #0066cc;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  padding: 0.5rem;
-  margin-top: 1rem;
-  cursor: pointer;
-}
-
-#devam-btn:hover,
-#bank-selection-form button:hover,
-#iban-form button:hover {
-  background-color: #0052a3;
-}
-
-.hidden {
-  display: none;
-}
-
-#deposit-button {
-  background-color: #009933;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  padding: 0.5rem;
-  margin-top: 1rem;
-  cursor: pointer;
-}
-
-#deposit-button:hover {
-  background-color: #008026;
-}
-
-#success-screen {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: box-shadow 0.3s ease-in-out;
-  margin-top: 2rem;
-}
-	</style>
-</head>
-<body>
-	<div id="container">
-        <h1>Banka Uygulaması</h1>
-        
-        <div id="card">
-          <form id="form">
-            <label for="ad">Ad:</label>
-            <input type="text" id="ad" name="ad" required>
-      
-            <label for="soyad">Soyad:</label>
-            <input type="text" id="soyad" name="soyad" required>
-      
-            <button type="submit" id="devam-btn">Devam</button>
-          </form>
-      
-          <form id="bank-selection-form" class="hidden">
-            <p>Lütfen bir banka seçin:</p>
-            <label>
-              <input type="radio" name="bank" value="ziraat">
-              Ziraat Bankası
-            </label>
-            <label>
-              <input type="radio" name="bank" value="isbankasi">
-              İş Bankası
-            </label>
-            <label>
-              <input type="radio" name="bank" value="garanti">
-              Garanti BBVA
-            </label>
-            <button type="submit">Devam</button>
-          </form>
-      
-        <form id="iban-form" class="hidden">
-    <label for="iban">Hesap Adı:</label>
-    <input type="text" id="account-name" name="account-name" value="MUSTAFA ÖZDEMİR" readonly>
-    <br>
-    <label for="iban">IBAN:</label>
-    <input type="text" id="iban" name="iban" value="TR90 0011 1000 0000 0046 6439 57" readonly>
-    <br>
-    <label for="iban">Hesap No:</label>
-    <input type="text" id="account-number" name="account-number" value="46643957" readonly>
-    <button type="submit">Devam</button>
-</form> 
-          <button id="deposit-button" class="hidden">Yatır</button>
-      
-          <div id="success-screen" class="hidden">
-            <p>İşlem başarıyla tamamlandı.</p>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Otomatik Havale Paneli</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="app">
+        <form class="form" v-if="!bankSelected" @submit.prevent="onNameSubmit">
+          <div class="card">
+            <div>
+              <label for="name">İsim:</label>
+              <input id="name" type="text" v-model="name" required>
+            </div>
+            <div>
+              <label for="surname">Soyisim:</label>
+              <input id="surname" type="text" v-model="surname" required>
+            </div>
+            <button class="button" type="submit">Devam Et</button>
           </div>
+        </form>
+        <div class="card" v-if="bankSelected && !selectedBank">
+          <p class="countdown">{{ countdown }}</p>
+          <h2 class="card-title">Para yatırmak istediğiniz bankayı seçiniz:</h2>
+          <ul class="bank-list">
+            <li v-for="(bank, index) in banks" :key="index">
+              <input type="radio" v-model="selectedBank" :value="bank">
+              {{ bank.name }}
+            </li>
+          </ul>
+          <button class="button" @click="confirmBankSelection">Devam Et</button>
+        </div>
+        <div class="card" v-if="selectedBank">
+          <h2 class="card-title">{{ selectedBank.name }}</h2>
+          <p class="card-text">Hesap numarası: {{ selectedBank.accountNumber }}</p>
+          <p class="card-text">IBAN: {{ selectedBank.iban }}</p>
+          <button class="button" @click="onDeposit">Para Yatır</button>
         </div>
       </div>
-      
-            <script>
-                // Gerekli DOM elementlerini seçelim
-const form = document.querySelector('#form');
-const bankSelectionForm = document.querySelector('#bank-selection-form');
-const ibanForm = document.querySelector('#iban-form');
-const depositButton = document.querySelector('#deposit-button');
-const successScreen = document.querySelector('#success-screen');
+    </div>
 
-// Devam butonuna tıklandığında
-document.querySelector('#devam-btn').addEventListener('click', (event) => {
-  event.preventDefault(); // varsayılan davranışı engelle
-
-  // Ad ve soyadın değerlerini alalım
-  const ad = document.querySelector('#ad').value;
-  const soyad = document.querySelector('#soyad').value;
-
-  // Ad ve soyadın boş olup olmadığını kontrol edelim
-  if (ad === '' || soyad === '') {
-    alert('Lütfen ad ve soyadınızı girin.');
-  } else {
-    // Banka seçimi formunu gösterelim, diğerlerini gizleyelim
-    form.classList.add('hidden');
-    bankSelectionForm.classList.remove('hidden');
-
-    // Seçim yapıldığında
-    bankSelectionForm.addEventListener('submit', (event) => {
-      event.preventDefault(); // varsayılan davranışı engelle
-
-      // Seçilen bankanın değerini alalım
-      const bank = document.querySelector('input[name="bank"]:checked').value;
-
-      // IBAN formunu gösterelim, diğerlerini gizleyelim
-      bankSelectionForm.classList.add('hidden');
-      ibanForm.classList.remove('hidden');
-
-      // IBAN girildiğinde
-      ibanForm.addEventListener('submit', (event) => {
-        event.preventDefault(); // varsayılan davranışı engelle
-
-        // IBAN'ın değerini alalım
-        const iban = document.querySelector('#iban').value;
-
-        // Yatır butonunu gösterelim, diğerlerini gizleyelim
-        ibanForm.classList.add('hidden');
-        depositButton.classList.remove('hidden');
-
-        // Yatır butonuna tıklandığında
-        depositButton.addEventListener('click', (event) => {
-          event.preventDefault(); // varsayılan davranışı engelle
-
-          // İşlem başarıyla tamamlandı ekranını gösterelim
-          depositButton.classList.add('hidden');
-          successScreen.classList.remove('hidden');
-
-          // 3 saniye sonra sayfayı yenileyelim
-          setTimeout(() => {
-            location.reload();
-          }, 3000);
-        });
-      });
-    });
-  }
-});
-
-            </script>
- </body></html>
+    <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
